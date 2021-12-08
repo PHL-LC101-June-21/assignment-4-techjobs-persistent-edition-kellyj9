@@ -58,15 +58,15 @@ public class HomeController {
                     @ModelAttribute @Valid Job newJob,
                     Errors errors,
                     Model model,
-                    @RequestParam(required = false) int employerId,
-                    @RequestParam(defaultValue = "") List<Integer> checkedSkills) {
+                    @RequestParam int employerId,
+                    @RequestParam List<Integer> checkedSkills) {
 
-        if (checkedSkills.equals("") || checkedSkills.contains(null)) {
+        if ((checkedSkills.size()== 1 && checkedSkills.get(0) == 0)) {
             model.addAttribute("title", "Add Job");
             model.addAttribute("job", newJob);
             model.addAttribute("employers", employerRepository.findAll());
             model.addAttribute("skills", skillRepository.findAll());
-            model.addAttribute("checkedSkills", new ArrayList<>());
+            //model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
         }
 
@@ -76,7 +76,7 @@ public class HomeController {
             model.addAttribute("job", newJob);
             model.addAttribute("employers", employerRepository.findAll());
             model.addAttribute("skills", skillRepository.findAll());
-            model.addAttribute("checkedSkills", new ArrayList<>());
+            //model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
         }
 

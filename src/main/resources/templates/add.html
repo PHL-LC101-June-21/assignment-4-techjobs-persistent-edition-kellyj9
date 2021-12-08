@@ -16,24 +16,29 @@
 
     <div class="form-group">
         <label th:for="employer">Employer</label>
+
+
         <select name="employerId">
             <option th:each="employer : ${employers}"
                     th:text="${employer.name}"
                     th:value="${employer.id}"></option>
+
         </select>
+
         <a th:href="@{'/employers/add'}">Add Employers</a>
     </div>
 
     <div class="form-group">
 
+        <input type="hidden" th:value="0" th:name="checkedSkills">
+
         <label th:for="skills">Skills</label>
         <th:block th:each="skill : ${skills}">
-            <!--
-            <input type="hidden" th:field="${checkedSkills}">
-            -->
             <input type="checkbox" th:value="${skill.id}" th:name="checkedSkills">
             <label th:text="${skill.name}"></label>
         </th:block>
+
+
 
         <a th:href="@{'/skills/add'}">Add Skills</a>
     </div>

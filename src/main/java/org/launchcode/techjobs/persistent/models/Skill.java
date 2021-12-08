@@ -20,13 +20,6 @@ public class Skill extends AbstractEntity {
 
     public Skill() {
     }
-//
-//    public Skill(String description) {
-//        super();
-//        this.description = description;
-////        this.jobs = jobs;
-//    }
-
 
     public Skill(String description) {
         super();
