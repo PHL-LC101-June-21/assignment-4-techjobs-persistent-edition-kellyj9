@@ -61,7 +61,21 @@ public class HomeController {
                     @RequestParam int employerId,
                     @RequestParam List<Integer> checkedSkills) {
 
-        if ((checkedSkills.size()== 1 && checkedSkills.get(0) == 0)) {
+        boolean isInvalid = false;
+        if ((checkedSkills.size() == 1 && checkedSkills.get(0) == 0))  {
+                isInvalid=true;
+                errors.rejectValue("skills", "skills.invalidskills",
+                        "At least one skill must be chosen.");
+        }
+
+        if (employerId == 0) {
+            isInvalid=true;
+            errors.rejectValue("employer", "employer.invalidemployer",
+                    "An employer must be chosen.");
+        }
+
+        //may be able to take out this
+        if (isInvalid)  {
             model.addAttribute("title", "Add Job");
             model.addAttribute("job", newJob);
             model.addAttribute("employers", employerRepository.findAll());
