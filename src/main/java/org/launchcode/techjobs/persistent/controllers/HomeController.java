@@ -13,8 +13,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,6 +48,8 @@ public class HomeController {
         model.addAttribute("job", new Job());
         model.addAttribute("employers", employerRepository.findAll());
         model.addAttribute("skills", skillRepository.findAll());
+       // List<Integer> checkedSkills = new ArrayList<>();
+        //model.addAttribute("checkedSkills", new ArrayList<>());
         return "add";
     }
 
@@ -55,24 +58,25 @@ public class HomeController {
                     @ModelAttribute @Valid Job newJob,
                     Errors errors,
                     Model model,
-                    @RequestParam(required=false) int employerId,
-                    @RequestParam(required=false) List<Integer> skills) {
+                    @RequestParam(required = false) int employerId,
+                    @RequestParam(defaultValue = "") List<Integer> checkedSkills) {
 
-
-        if (skills.isEmpty() || employerId == 0) {
+        if (checkedSkills.equals("") || checkedSkills.contains(null)) {
             model.addAttribute("title", "Add Job");
             model.addAttribute("job", newJob);
             model.addAttribute("employers", employerRepository.findAll());
             model.addAttribute("skills", skillRepository.findAll());
+            model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
         }
 
-        // NOTE: maybe be able to combine this code with above
+        // NOTE: may be able to combine this code with above
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             model.addAttribute("job", newJob);
             model.addAttribute("employers", employerRepository.findAll());
             model.addAttribute("skills", skillRepository.findAll());
+            model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
         }
 
@@ -84,7 +88,16 @@ public class HomeController {
             return "redirect:";
         }
 
-        Iterable<Skill> skillObjs = skillRepository.findAllById(skills);
+//
+//        List <Integer> checkedSkillsIntegerList = new ArrayList<>();
+//        for (String skill : checkedSkills) {
+//                    checkedSkillsIntegerList.add(Integer.parseInt(skill));
+//        }
+
+       // Iterable<Skill> skillObjs = skillRepository.findAllById(checkedSkillsIntegerList);
+
+        Iterable<Skill> skillObjs = skillRepository.findAllById(checkedSkills);
+
 
         if (!(skillObjs.iterator().hasNext())) {
             model.addAttribute("title", "My Jobs");
