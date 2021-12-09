@@ -33,11 +33,9 @@ EmployerRepository employerRepository;
     @PostMapping("add")
     public String processAddEmployerForm(@ModelAttribute @Valid Employer newEmployer,
                                     Errors errors, Model model) {
-
         if (errors.hasErrors()) {
             return "employers/add";
         }
-
         employerRepository.save(newEmployer);
 
         return "redirect:";
