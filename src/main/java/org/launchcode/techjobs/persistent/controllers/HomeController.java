@@ -48,8 +48,8 @@ public class HomeController {
         model.addAttribute("job", new Job());
         model.addAttribute("employers", employerRepository.findAll());
         model.addAttribute("skills", skillRepository.findAll());
-       // List<Integer> checkedSkills = new ArrayList<>();
-        //model.addAttribute("checkedSkills", new ArrayList<>());
+        //List<Skill> checkedSkills = new ArrayList<>();
+        //model.addAttribute("checkedSkills", checkedSkills);
         return "add";
     }
 
@@ -59,10 +59,11 @@ public class HomeController {
                     Errors errors,
                     Model model,
                     @RequestParam int employerId,
-                    @RequestParam List<Integer> checkedSkills) {
+                    @RequestParam List<Skill> skills) {
 
         boolean isInvalid = false;
-        if ((checkedSkills.size() == 1 && checkedSkills.get(0) == 0))  {
+
+        if (skills.isEmpty())  {
                 isInvalid=true;
                 errors.rejectValue("skills", "skills.invalidskills",
                         "At least one skill must be chosen.");
@@ -80,7 +81,7 @@ public class HomeController {
             model.addAttribute("job", newJob);
             model.addAttribute("employers", employerRepository.findAll());
             model.addAttribute("skills", skillRepository.findAll());
-            //model.addAttribute("checkedSkills", new ArrayList<>());
+
             return "add";
         }
 
@@ -110,7 +111,12 @@ public class HomeController {
 
        // Iterable<Skill> skillObjs = skillRepository.findAllById(checkedSkillsIntegerList);
 
-        Iterable<Skill> skillObjs = skillRepository.findAllById(checkedSkills);
+        List<Integer> skillIds = new ArrayList<>();
+        for (Skill skill : skills) {
+            skillIds.add(skill.getId());
+        }
+
+        Iterable<Skill> skillObjs = skillRepository.findAllById(skillIds);
 
 
         if (!(skillObjs.iterator().hasNext())) {
