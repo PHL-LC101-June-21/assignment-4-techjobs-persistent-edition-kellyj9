@@ -40,11 +40,12 @@
         <label th:for="skills">Skills</label>
 
         <th:block th:each="skill_item : ${allSkills}">
+
             <input type="checkbox"  name="skills"
-                   th:text="${skill_item.name}"
-                   th:value="${skill_item.id}"
-                   th:field="*{job.skills}">
-          <!--  <label th:text="${skill_item.name}"></label> -->
+                        th:text="${skill_item.name}"
+                        th:value="${skill_item.id}"
+                        th:field="*{job.skills}">
+
         </th:block>
 
         <a th:href="@{'/skills/add'}">Add Skills</a>

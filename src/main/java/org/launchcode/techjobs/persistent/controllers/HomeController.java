@@ -87,14 +87,11 @@ public class HomeController {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
 
-
             List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
-            model.addAttribute("skills", new ArrayList<Skill>());
 
             List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
             model.addAttribute("allEmployers", allEmployers);
-            model.addAttribute("employer", new ArrayList<Employer>());
 
             model.addAttribute("employerId", employerId);
 
@@ -112,11 +109,9 @@ public class HomeController {
 
             List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
-            model.addAttribute("skills", new ArrayList<Skill>());
 
             List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
             model.addAttribute("allEmployers", allEmployers);
-            model.addAttribute("employer", new ArrayList<Employer>());
 
             model.addAttribute("employerId", employerId);
 
@@ -132,11 +127,9 @@ public class HomeController {
 
             List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
-            model.addAttribute("skills", new ArrayList<Skill>());
 
             List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
             model.addAttribute("allEmployers", allEmployers);
-            model.addAttribute("employer", new ArrayList<Employer>());
 
             model.addAttribute("employerId", employerId);
             return "add";
@@ -162,7 +155,6 @@ public class HomeController {
         model.addAttribute("job", jobRepository.findById(jobId).get());
         return "view";
     }
-
 
     @GetMapping("list-jobs")
     public String displayListJobs(Model model) {
