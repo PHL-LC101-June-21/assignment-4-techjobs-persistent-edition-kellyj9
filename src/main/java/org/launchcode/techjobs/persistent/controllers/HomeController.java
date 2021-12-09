@@ -44,27 +44,23 @@ public class HomeController {
 
     @GetMapping("add")
     public String displayAddJobForm(Model model) {
-        model.addAttribute("title", "Add Job");
-        model.addAttribute("job", new Job());
-        //model.addAttribute("employers", employerRepository.findAll());
 
-        // get all the skill objects from the repository
+        // add the title of the page to the model
+        model.addAttribute("title", "Add Job");
+
+        // add a new job object to the model
+        model.addAttribute("job", new Job());
+
+        // get all the skill objects from the skill repository
         List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
-       // get all the skill IDs from the skills objects
-//        List<Integer> allSkills = new ArrayList<>();
-//        for (Skill obj : allObjs) {
-//            allSkills.add(obj.getId());
-//        }
         // add allSkills to the model.  (allSkills contains all the skills IDs)
         model.addAttribute("allSkills", allSkills);
 
+        // get all the employer objects from the employer repository
         List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
+        // add allEmployers to the model.  (allEmployers contains all the employer IDs)
         model.addAttribute("allEmployers", allEmployers);
 
-//        model.addAttribute("skills", new ArrayList<Skill>());
-
-        //List<Integer> checkedSkills = new ArrayList<>();
-        //model.addAttribute("checkedSkills", checkedSkills);
         return "add";
     }
 
@@ -76,35 +72,22 @@ public class HomeController {
                     @RequestParam int employerId,
                     @RequestParam List<Integer> skills) {
 
-        boolean isInvalid = false;
-
+        // if the user select any skills...
         if (skills.isEmpty())  {
-                isInvalid=true;
                 errors.rejectValue("skills", "skills.invalidskills",
                         "At least one skill must be chosen.");
         }
 
         if (employerId == 0) {
-            isInvalid=true;
             errors.rejectValue("employer", "employer.invalidemployer",
                     "An employer must be chosen.");
         }
 
-        //may be able to take out this
-//        if (isInvalid)  {
-//            model.addAttribute("title", "Add Job");
-//            model.addAttribute("job", newJob);
-//            model.addAttribute("employers", employerRepository.findAll());
-//            model.addAttribute("skills", skillRepository.findAll());
-//
-//            return "add";
-//        }
-
-        // NOTE: may be able to combine this code with above
+        // if the form wasn't filled out properly...
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
-           // model.addAttribute("job", new Job());
-            //model.addAttribute("employers", employerRepository.findAll());
+
+
             List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
             model.addAttribute("skills", new ArrayList<Skill>());
@@ -115,22 +98,17 @@ public class HomeController {
 
             model.addAttribute("employerId", employerId);
 
-            //model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
         }
 
+        // find the employer in the employer respository with the employer Id that was
+        // chosen in the form
         Optional<Employer> employerOptional = employerRepository.findById(employerId);
-
+        // if we didn't find the employer...
         if (employerOptional.isEmpty()) {
+           // add all the items back to the model and return to the add job form
+
             model.addAttribute("title", "Add Job");
-           // model.addAttribute("job", new Job());
-//            model.addAttribute("employers", employerRepository.findAll());
-//
-//            List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
-//            model.addAttribute("allSkills", allSkills);
-//            model.addAttribute("skills", new ArrayList<Skill>());
-
-
 
             List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
@@ -141,37 +119,17 @@ public class HomeController {
             model.addAttribute("employer", new ArrayList<Employer>());
 
             model.addAttribute("employerId", employerId);
-            //model.addAttribute("checkedSkills", new ArrayList<>());
+
             return "add";
-//            model.addAttribute("title", "My Jobs");
-//            model.addAttribute("jobs", jobRepository.findAll());
-//            return "redirect:";
         }
 
-//
-//        List <Integer> checkedSkillsIntegerList = new ArrayList<>();
-//        for (String skill : checkedSkills) {
-//                    checkedSkillsIntegerList.add(Integer.parseInt(skill));
-//        }
-
-       // Iterable<Skill> skillObjs = skillRepository.findAllById(checkedSkillsIntegerList);
-
-//        List<Integer> skillIds = new ArrayList<>();
-//        for (Skill skill : checkedSkills) {
-//            skillIds.add();
-//        }
-
+        // find the skill(s) in the skill respository with the skill Id(s) chosen in the form
         Iterable<Skill> skillObjs = skillRepository.findAllById(skills);
-
+        // if we didn't find the skill(s)...
         if (!(skillObjs.iterator().hasNext())) {
+            // add all the items back to the model and return to the add job form
             model.addAttribute("title", "Add Job");
-//            model.addAttribute("job", new Job());
-//            model.addAttribute("employers", employerRepository.findAll());
-//
-//            List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
-//            model.addAttribute("allSkills", allSkills);
-//            model.addAttribute("skills", new ArrayList<Skill>());
-            //model.addAttribute("checkedSkills", new ArrayList<>());
+
             List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
             model.addAttribute("skills", new ArrayList<Skill>());
@@ -182,17 +140,17 @@ public class HomeController {
 
             model.addAttribute("employerId", employerId);
             return "add";
-//            model.addAttribute("title", "My Jobs");
-//            model.addAttribute("jobs", jobRepository.findAll());
-//            return "redirect:";
         }
 
+        // we passed all the validation, so set the skills and employer for the job
+        // and save it to the job repository
         newJob.setSkills((List<Skill>) skillObjs);
         Employer employer = (Employer) employerOptional.get();
         newJob.setEmployer(employer);
-
         jobRepository.save(newJob);
 
+        // now that we have the new job,
+        // we can show the job and page title on the view page
         model.addAttribute("job", newJob);
         model.addAttribute("title", "Job: " + newJob.getName());
         return "view";
