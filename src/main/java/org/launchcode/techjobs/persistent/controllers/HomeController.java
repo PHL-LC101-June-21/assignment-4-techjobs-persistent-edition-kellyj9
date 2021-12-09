@@ -47,9 +47,22 @@ public class HomeController {
         model.addAttribute("title", "Add Job");
         model.addAttribute("job", new Job());
         model.addAttribute("employers", employerRepository.findAll());
-        model.addAttribute("skills", skillRepository.findAll());
-        List<Integer> checkedSkills = new ArrayList<>();
-        model.addAttribute("checkedSkills", checkedSkills);
+
+        // get all the skill objects from the repository
+        List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
+       // get all the skill IDs from the skills objects
+//        List<Integer> allSkills = new ArrayList<>();
+//        for (Skill obj : allObjs) {
+//            allSkills.add(obj.getId());
+//        }
+        // add allSkills to the model.  (allSkills contains all the skills IDs)
+        model.addAttribute("allSkills", allSkills);
+
+
+//        model.addAttribute("skills", new ArrayList<Skill>());
+
+        //List<Integer> checkedSkills = new ArrayList<>();
+        //model.addAttribute("checkedSkills", checkedSkills);
         return "add";
     }
 
@@ -59,11 +72,11 @@ public class HomeController {
                     Errors errors,
                     Model model,
                     @RequestParam int employerId,
-                    @RequestParam List<Integer> checkedSkills) {
+                    @RequestParam List<Integer> skills) {
 
         boolean isInvalid = false;
 
-        if (checkedSkills.isEmpty())  {
+        if (skills.isEmpty())  {
                 isInvalid=true;
                 errors.rejectValue("skills", "skills.invalidskills",
                         "At least one skill must be chosen.");
@@ -88,9 +101,11 @@ public class HomeController {
         // NOTE: may be able to combine this code with above
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
-            model.addAttribute("job", newJob);
+           // model.addAttribute("job", new Job());
             model.addAttribute("employers", employerRepository.findAll());
-            model.addAttribute("skills", skillRepository.findAll());
+            List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
+            model.addAttribute("allSkills", allSkills);
+            model.addAttribute("skills", new ArrayList<Skill>());
             //model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
         }
@@ -99,9 +114,12 @@ public class HomeController {
 
         if (employerOptional.isEmpty()) {
             model.addAttribute("title", "Add Job");
-            model.addAttribute("job", newJob);
+           // model.addAttribute("job", new Job());
             model.addAttribute("employers", employerRepository.findAll());
-            model.addAttribute("skills", skillRepository.findAll());
+
+            List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
+            model.addAttribute("allSkills", allSkills);
+            model.addAttribute("skills", new ArrayList<Skill>());
             //model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
 //            model.addAttribute("title", "My Jobs");
@@ -122,13 +140,16 @@ public class HomeController {
 //            skillIds.add();
 //        }
 
-        Iterable<Skill> skillObjs = skillRepository.findAllById(checkedSkills);
+        Iterable<Skill> skillObjs = skillRepository.findAllById(skills);
 
         if (!(skillObjs.iterator().hasNext())) {
             model.addAttribute("title", "Add Job");
-            model.addAttribute("job", newJob);
+            model.addAttribute("job", new Job());
             model.addAttribute("employers", employerRepository.findAll());
-            model.addAttribute("skills", skillRepository.findAll());
+
+            List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
+            model.addAttribute("allSkills", allSkills);
+            model.addAttribute("skills", new ArrayList<Skill>());
             //model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
 //            model.addAttribute("title", "My Jobs");
