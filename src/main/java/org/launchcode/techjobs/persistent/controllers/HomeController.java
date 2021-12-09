@@ -46,7 +46,7 @@ public class HomeController {
     public String displayAddJobForm(Model model) {
         model.addAttribute("title", "Add Job");
         model.addAttribute("job", new Job());
-        model.addAttribute("employers", employerRepository.findAll());
+        //model.addAttribute("employers", employerRepository.findAll());
 
         // get all the skill objects from the repository
         List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
@@ -58,6 +58,8 @@ public class HomeController {
         // add allSkills to the model.  (allSkills contains all the skills IDs)
         model.addAttribute("allSkills", allSkills);
 
+        List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
+        model.addAttribute("allEmployers", allEmployers);
 
 //        model.addAttribute("skills", new ArrayList<Skill>());
 
@@ -102,10 +104,17 @@ public class HomeController {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
            // model.addAttribute("job", new Job());
-            model.addAttribute("employers", employerRepository.findAll());
+            //model.addAttribute("employers", employerRepository.findAll());
             List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
             model.addAttribute("skills", new ArrayList<Skill>());
+
+            List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
+            model.addAttribute("allEmployers", allEmployers);
+            model.addAttribute("employer", new ArrayList<Employer>());
+
+            model.addAttribute("employerId", employerId);
+
             //model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
         }
@@ -115,11 +124,23 @@ public class HomeController {
         if (employerOptional.isEmpty()) {
             model.addAttribute("title", "Add Job");
            // model.addAttribute("job", new Job());
-            model.addAttribute("employers", employerRepository.findAll());
+//            model.addAttribute("employers", employerRepository.findAll());
+//
+//            List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
+//            model.addAttribute("allSkills", allSkills);
+//            model.addAttribute("skills", new ArrayList<Skill>());
 
-            List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
+
+
+            List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
             model.addAttribute("skills", new ArrayList<Skill>());
+
+            List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
+            model.addAttribute("allEmployers", allEmployers);
+            model.addAttribute("employer", new ArrayList<Employer>());
+
+            model.addAttribute("employerId", employerId);
             //model.addAttribute("checkedSkills", new ArrayList<>());
             return "add";
 //            model.addAttribute("title", "My Jobs");
@@ -144,13 +165,22 @@ public class HomeController {
 
         if (!(skillObjs.iterator().hasNext())) {
             model.addAttribute("title", "Add Job");
-            model.addAttribute("job", new Job());
-            model.addAttribute("employers", employerRepository.findAll());
-
-            List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
+//            model.addAttribute("job", new Job());
+//            model.addAttribute("employers", employerRepository.findAll());
+//
+//            List<Skill> allSkills = (List <Skill>) skillRepository.findAll();
+//            model.addAttribute("allSkills", allSkills);
+//            model.addAttribute("skills", new ArrayList<Skill>());
+            //model.addAttribute("checkedSkills", new ArrayList<>());
+            List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
             model.addAttribute("allSkills", allSkills);
             model.addAttribute("skills", new ArrayList<Skill>());
-            //model.addAttribute("checkedSkills", new ArrayList<>());
+
+            List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
+            model.addAttribute("allEmployers", allEmployers);
+            model.addAttribute("employer", new ArrayList<Employer>());
+
+            model.addAttribute("employerId", employerId);
             return "add";
 //            model.addAttribute("title", "My Jobs");
 //            model.addAttribute("jobs", jobRepository.findAll());
