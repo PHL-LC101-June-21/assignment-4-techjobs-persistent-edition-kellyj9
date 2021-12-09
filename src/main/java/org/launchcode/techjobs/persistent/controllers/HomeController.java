@@ -48,8 +48,8 @@ public class HomeController {
         model.addAttribute("job", new Job());
         model.addAttribute("employers", employerRepository.findAll());
         model.addAttribute("skills", skillRepository.findAll());
-        //List<Skill> checkedSkills = new ArrayList<>();
-        //model.addAttribute("checkedSkills", checkedSkills);
+        List<Integer> checkedSkills = new ArrayList<>();
+        model.addAttribute("checkedSkills", checkedSkills);
         return "add";
     }
 
@@ -59,11 +59,11 @@ public class HomeController {
                     Errors errors,
                     Model model,
                     @RequestParam int employerId,
-                    @RequestParam List<Skill> skills) {
+                    @RequestParam List<Integer> checkedSkills) {
 
         boolean isInvalid = false;
 
-        if (skills.isEmpty())  {
+        if (checkedSkills.isEmpty())  {
                 isInvalid=true;
                 errors.rejectValue("skills", "skills.invalidskills",
                         "At least one skill must be chosen.");
@@ -76,14 +76,14 @@ public class HomeController {
         }
 
         //may be able to take out this
-        if (isInvalid)  {
-            model.addAttribute("title", "Add Job");
-            model.addAttribute("job", newJob);
-            model.addAttribute("employers", employerRepository.findAll());
-            model.addAttribute("skills", skillRepository.findAll());
-
-            return "add";
-        }
+//        if (isInvalid)  {
+//            model.addAttribute("title", "Add Job");
+//            model.addAttribute("job", newJob);
+//            model.addAttribute("employers", employerRepository.findAll());
+//            model.addAttribute("skills", skillRepository.findAll());
+//
+//            return "add";
+//        }
 
         // NOTE: may be able to combine this code with above
         if (errors.hasErrors()) {
@@ -98,9 +98,15 @@ public class HomeController {
         Optional<Employer> employerOptional = employerRepository.findById(employerId);
 
         if (employerOptional.isEmpty()) {
-            model.addAttribute("title", "My Jobs");
-            model.addAttribute("jobs", jobRepository.findAll());
-            return "redirect:";
+            model.addAttribute("title", "Add Job");
+            model.addAttribute("job", newJob);
+            model.addAttribute("employers", employerRepository.findAll());
+            model.addAttribute("skills", skillRepository.findAll());
+            //model.addAttribute("checkedSkills", new ArrayList<>());
+            return "add";
+//            model.addAttribute("title", "My Jobs");
+//            model.addAttribute("jobs", jobRepository.findAll());
+//            return "redirect:";
         }
 
 //
@@ -111,23 +117,28 @@ public class HomeController {
 
        // Iterable<Skill> skillObjs = skillRepository.findAllById(checkedSkillsIntegerList);
 
-        List<Integer> skillIds = new ArrayList<>();
-        for (Skill skill : skills) {
-            skillIds.add(skill.getId());
-        }
+//        List<Integer> skillIds = new ArrayList<>();
+//        for (Skill skill : checkedSkills) {
+//            skillIds.add();
+//        }
 
-        Iterable<Skill> skillObjs = skillRepository.findAllById(skillIds);
-
+        Iterable<Skill> skillObjs = skillRepository.findAllById(checkedSkills);
 
         if (!(skillObjs.iterator().hasNext())) {
-            model.addAttribute("title", "My Jobs");
-            model.addAttribute("jobs", jobRepository.findAll());
-            return "redirect:";
+            model.addAttribute("title", "Add Job");
+            model.addAttribute("job", newJob);
+            model.addAttribute("employers", employerRepository.findAll());
+            model.addAttribute("skills", skillRepository.findAll());
+            //model.addAttribute("checkedSkills", new ArrayList<>());
+            return "add";
+//            model.addAttribute("title", "My Jobs");
+//            model.addAttribute("jobs", jobRepository.findAll());
+//            return "redirect:";
         }
 
+        newJob.setSkills((List<Skill>) skillObjs);
         Employer employer = (Employer) employerOptional.get();
         newJob.setEmployer(employer);
-        newJob.setSkills((ArrayList<Skill>) skillObjs);
 
         jobRepository.save(newJob);
 

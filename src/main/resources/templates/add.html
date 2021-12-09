@@ -33,12 +33,12 @@
 
     <div class="form-group">
 
-        <input type="hidden" th:value="''" th:name="skills">
+        <input type="hidden" th:value="''" th:name="checkedSkills">
 
-        <label th:for="skills">Skills</label>
+        <label th:for="checkedSkills">Skills</label>
 
         <th:block th:each="skill : ${skills}">
-            <input type="checkbox" th:value="${skill.id}" th:name="skills">
+            <input type="checkbox" th:value="${skill.id}" th:name="checkedSkills">
             <label th:text="${skill.name}"></label>
         </th:block>
 
