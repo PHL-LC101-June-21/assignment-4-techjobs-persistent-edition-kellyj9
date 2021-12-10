@@ -68,7 +68,7 @@ public class HomeController {
                     @RequestParam int employerId,
                     @RequestParam List<Integer> skills) {
 
-        // if the user select any skills...
+        // if the user didn't select any skills...
         if (skills.isEmpty())  {
                 errors.rejectValue("skills", "skills.invalidskills",
                         "At least one skill must be chosen.");
@@ -94,47 +94,16 @@ public class HomeController {
             return "add";
         }
 
-        // find the employer in the employer respository with the employer Id that was
+        // find the employer in the employer repository with the employer Id that was
         // chosen in the form
-        Optional<Employer> employerOptional = employerRepository.findById(employerId);
-        // if we didn't find the employer...
-        if (employerOptional.isEmpty()) {
-           // add all the items back to the model and return to the add job form
-
-            model.addAttribute("title", "Add Job");
-
-            List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
-            model.addAttribute("allSkills", allSkills);
-
-            List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
-            model.addAttribute("allEmployers", allEmployers);
-
-            model.addAttribute("employerId", employerId);
-
-            return "add";
-        }
+        Employer employer = employerRepository.findById(employerId).orElse(new Employer());
 
         // find the skill(s) in the skill respository with the skill Id(s) chosen in the form
-        Iterable<Skill> skillObjs = skillRepository.findAllById(skills);
-        // if we didn't find the skill(s)...
-        if (!(skillObjs.iterator().hasNext())) {
-            // add all the items back to the model and return to the add job form
-            model.addAttribute("title", "Add Job");
-
-            List<Skill> allSkills = (List<Skill>) skillRepository.findAll();
-            model.addAttribute("allSkills", allSkills);
-
-            List<Employer> allEmployers = (List<Employer>) employerRepository.findAll();
-            model.addAttribute("allEmployers", allEmployers);
-
-            model.addAttribute("employerId", employerId);
-            return "add";
-        }
+        List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
 
         // we passed all the validation, so set the skills and employer for the job
         // and save it to the job repository
         newJob.setSkills((List<Skill>) skillObjs);
-        Employer employer = (Employer) employerOptional.get();
         newJob.setEmployer(employer);
         jobRepository.save(newJob);
 
