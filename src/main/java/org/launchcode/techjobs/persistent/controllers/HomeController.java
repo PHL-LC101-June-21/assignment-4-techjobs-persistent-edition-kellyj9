@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by LaunchCode
@@ -74,6 +73,7 @@ public class HomeController {
                         "At least one skill must be chosen.");
         }
 
+        // if the user didn't select an employer
         if (employerId == 0) {
             errors.rejectValue("employer", "employer.invalidemployer",
                     "An employer must be chosen.");
